@@ -1,0 +1,30 @@
+site_name: lab.k8sky.dev
+site_url: https://lab.k8sky.dev
+site_description: "home lab"
+site_author: "Andrzej Kaczynski"
+
+nav:
+  - Home: index.md
+  - Hardware: 
+    - "Protectli Vault VP2420": "hardware/protectli-vp2420.md"
+    - "PiKVM-A3": "hardware/pikvm-a3.md"
+    - "Costs": "hardware/costs.md"
+  - Software:
+    - "Proxmox VE": "software/proxmox-ve.md"
+    - "OPNsense": "software/opnsense.md"
+  - About: about.md
+
+theme: 
+  name: material
+  palette:
+    primary: black
+    scheme: slate
+  features:
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.path
+
+copyright: "Copyright 2023-2024 @ Andrzej Kaczynski"
+extra:
+  generator: false
+
