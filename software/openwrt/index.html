@@ -12,13 +12,13 @@
         <meta name="author" content="Andrzej Kaczynski">
       
       
-        <link rel="canonical" href="https://lab.k8sky.dev/software/opnsense/">
+        <link rel="canonical" href="https://lab.k8sky.dev/software/openwrt/">
       
       
-        <link rel="prev" href="../proxmox-ve/">
+        <link rel="prev" href="../opnsense/">
       
       
-        <link rel="next" href="../openwrt/">
+        <link rel="next" href="../../about/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#firewall" class="md-skip">
+        <a href="#wifi-access-point" class="md-skip">
           Skip to content
         </a>
       
@@ -476,6 +476,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../opnsense/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OPNsense
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -492,33 +513,12 @@
         
   
   <span class="md-ellipsis">
-    OPNsense
-  </span>
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openwrt/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
     OpenWRT
   </span>
   
 
       </a>
+      
     </li>
   
 
@@ -584,7 +584,104 @@
                   
 
 
-<h1 id="firewall">Firewall</h1>
+<h1 id="wifi-access-point">WiFi Access Point</h1>
+<p>I bought my Protectli VP2420 device with extra WiFi Kit <a href="https://eu.protectli.com/product/m2-wifi/">Protectli M.2 802.11ac WiFi Kit</a>. I wanted to have all-in-one solution with WiFi included. Because, the BSD like systems does not support a lot of WiFi Chipsets (due to lack of drivers), configuring WiFi module based on <strong>Qualcomm Atheros QCA6174A-5</strong> was not an option on OPNsense. I was disappointed about it. But there are alternative solutions, like <strong>OpenWrt</strong> which supports it. However, installing and configuring it is not a piece of cake. More on it in further reading. </p>
+<h1 id="openwrt">OpenWrt</h1>
+<p>The OpenWrt is well known, open source embedded operating system based on Linux. It's common alternative system for WiFi home Routers &amp; Access Points which supports it. It comes with a number of options to configure your WiFi environment. It can be configured with both CLI or UI (Luci). Protectli created a nice tutorial about configuring and installing OpenWRT on the Vault. </p>
+<p><a href="https://kb.protectli.com/kb/how-to-configure-protectli-wifi-kit-wap01k-in-openwrt-on-the-vault/">How to Configure Protectli Wifi Kit in OpenWrt on the Vault</a></p>
+<h1 id="vm-configuration">VM Configuration</h1>
+<p>I want to configure OpenWrt as Virtual Machine on Proxmox (LXC containers does not support physical devices passthrough). I found a nice article about the procedure <a href="https://i12bretro.github.io/tutorials/0405.html">https://i12bretro.github.io/tutorials/0405.html</a>, but decided to improve it by using Tofu for VM creating and configuration.</p>
+<p>The VM will have single vNIC bridged to LAN subnet (vmbr1) and physical WLAN interface mapped from Protectli device. See below diagram for more info:</p>
+<p><img alt="proxmox" src="../img/openwrt/openwrt.png" /></p>
+<p>Here is my VM resource configured with the help of Tofu</p>
+<pre><code class="language-bash">resource &quot;proxmox_virtual_environment_vm&quot; &quot;openwrt&quot; {
+  name        = &quot;openwrt&quot;
+  description = &quot;OpenWRT WiFi AP&quot;
+  tags        = [&quot;network&quot;]
+
+  node_name = var.node
+  vm_id     = 101
+
+  cpu {
+    type = &quot;host&quot;
+  }
+
+  hostpci {
+    device = &quot;hostpci0&quot;
+    id = &quot;0000:05:00.0&quot;
+    rombar = true
+  }
+
+  memory {
+    dedicated = 256
+  }
+
+  network_device {
+    bridge = &quot;vmbr1&quot;
+  }
+
+  operating_system {
+    type = &quot;l26&quot;
+  }
+
+  tablet_device = false
+  on_boot = false
+
+  boot_order = [&quot;scsi0&quot;,&quot;net0&quot;,&quot;hostpci0&quot;]
+}
+</code></pre>
+<p>The VM has been created without any hard drive for the purpose. I had to prepare and import disk with latest OpenWrt image as described in previously mentioned article. The below command needs to be run from the Proxmox host shell:</p>
+<pre><code class="language-bash">latestVersion=23.05.2
+wget -O openwrt.img.gz https://downloads.openwrt.org/releases/$latestVersion/targets/x86/64/openwrt-$latestVersion-x86-64-generic-ext4-combined.img.gz
+gunzip ./openwrt.img.gz
+mv ./openwrt*.img ./openwrt.raw
+qemu-img resize -f raw ./openwrt.raw 512M
+qm importdisk 102 openwrt.raw ssd-m2
+</code></pre>
+<p>Once the disk is imported and attached to OpenWrt VM, it needs to be attached into it. Just double click on the disk from the Hardware tab and confirm with OK. Now we can start the VM and wait a while for the system for the first boot.</p>
+<h1 id="system-configuration">System Configuration</h1>
+<p>The very first step is to set new root password by running the command:</p>
+<pre><code class="language-bash">passwd
+</code></pre>
+<p>This password will be used later to access the Luci UI.</p>
+<p>Next, configure the Interface IP Address, Default Gateway and DNS to allow access to the Internet. We are going to point to our OPNSense instance which plays a role of Firewall Gateway and temporary DNS:</p>
+<pre><code class="language-bash">uci set network.lan.ipaddr='192.168.1.2' 
+uci set network.lan.gateway='192.168.1.1' 
+uci set network.lan.dns='192.168.1.1' 
+uci commit
+service network restart
+opkg update
+</code></pre>
+<p>Once the connection is working, we need to install additional packages with drivers and software for our WiFi Kit:</p>
+<pre><code class="language-bash">opkg install hostapd 
+opkg install ath10k-firmware-qca6174  
+opkg install kmod-ath10k
+</code></pre>
+<p>Finally, update the firmware to allow OS recognize the interface.</p>
+<pre><code class="language-bash">wget https://kb.protectli.com/wp-content/uploads/sites/9/2023/06/wifi-fix-standalone-0.3.1.tar.gz -O /tmp/wifi-fix-standalone-0.3.1.tar.gz 
+cd /tmp 
+tar zxf wifi-fix-standalone-0.3.1.tar.gz  
+cp -rp /tmp/wifi-fix-standalone/vendor/* /lib/firmware/ath10k/QCA6174/hw3.0/ 
+reboot
+</code></pre>
+<p>After the reboot, we can see that <strong>wlan0</strong> interface appeared on the list of interfaces.</p>
+<p><img alt="pikvm-web" src="../img/openwrt/interfaces.png" /></p>
+<h1 id="openwrt-configuration">OpenWrt Configuration</h1>
+<p>In order to get access to OpenWRT, you need to have access to LAN network where OpenWrt VM is hosted. For me the best way was to create a tiny VM with minimal linux which has a browser and connect to Luci UI from there. In the next steps, I will show the minimum number of steps required to configure basic WiFi network with access to LAN behind OPNsense. For more advanced config, please refer to official project documentation.</p>
+<ol>
+<li>Login to Web UI using address <strong>https://192.168.1.2</strong> and accept not trusted SSL Certificate.</li>
+<li>Go to <strong>Network</strong> tab and select <strong>Wireless</strong>.</li>
+<li>Here you should see your radio0 device and default WiFi "OpenWRT" network.
+<img alt="Wireless Overview" src="../img/openwrt/luci1.png" /></li>
+<li>Edit the first available network and adjust at minimum <strong>ESSID</strong> value in General Setup tab + set the <strong>Encryption</strong> + key in Wireless Security tab.
+<img alt="Wireless Config" src="../img/openwrt/luci2.png" />
+<img alt="Wireless Config" src="../img/openwrt/luci3.png" /></li>
+<li>Save and Click on <strong>Enable</strong> button next to the previously edited interface.
+<img alt="Wireless Config" src="../img/openwrt/luci4.png" /></li>
+</ol>
+<p>After that, you can see your new network being broadcasted. Just login and enjoy it!</p>
+<h1 id="bottom-line">Bottom line</h1>
+<p>The configuration does not work out of the box. As you can see, the process requires a couple of non-trivial steps. With that being said, I must say I'm a bit disappointed. The signal is not a superpower. What is more, I would prefer to configure this WiFi on an OPNsense VM and not host another one and maintain it just for WiFi Management. I will think of maybe a dedicated WiFi device in the near future as an extension of my lab network.</p>
 
 
 
