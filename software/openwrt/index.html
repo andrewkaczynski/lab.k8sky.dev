@@ -506,8 +506,17 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    OpenWrt
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -518,6 +527,83 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wifi-access-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      WiFi Access Point
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openwrt" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenWrt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenWrt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vm-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      VM Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openwrt-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenWrt Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -568,8 +654,74 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wifi-access-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      WiFi Access Point
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openwrt" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenWrt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenWrt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vm-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      VM Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openwrt-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenWrt Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -584,12 +736,14 @@
                   
 
 
-<h1 id="wifi-access-point">WiFi Access Point</h1>
+  <h1>OpenWrt</h1>
+
+<h2 id="wifi-access-point">WiFi Access Point</h2>
 <p>I bought my Protectli VP2420 device with extra WiFi Kit <a href="https://eu.protectli.com/product/m2-wifi/">Protectli M.2 802.11ac WiFi Kit</a>. I wanted to have all-in-one solution with WiFi included. Because, the BSD like systems does not support a lot of WiFi Chipsets (due to lack of drivers), configuring WiFi module based on <strong>Qualcomm Atheros QCA6174A-5</strong> was not an option on OPNsense. I was disappointed about it. But there are alternative solutions, like <strong>OpenWrt</strong> which supports it. However, installing and configuring it is not a piece of cake. More on it in further reading. </p>
-<h1 id="openwrt">OpenWrt</h1>
+<h2 id="openwrt">OpenWrt</h2>
 <p>The OpenWrt is well known, open source embedded operating system based on Linux. It's common alternative system for WiFi home Routers &amp; Access Points which supports it. It comes with a number of options to configure your WiFi environment. It can be configured with both CLI or UI (Luci). Protectli created a nice tutorial about configuring and installing OpenWRT on the Vault. </p>
 <p><a href="https://kb.protectli.com/kb/how-to-configure-protectli-wifi-kit-wap01k-in-openwrt-on-the-vault/">How to Configure Protectli Wifi Kit in OpenWrt on the Vault</a></p>
-<h1 id="vm-configuration">VM Configuration</h1>
+<h3 id="vm-configuration">VM Configuration</h3>
 <p>I want to configure OpenWrt as Virtual Machine on Proxmox (LXC containers does not support physical devices passthrough). I found a nice article about the procedure <a href="https://i12bretro.github.io/tutorials/0405.html">https://i12bretro.github.io/tutorials/0405.html</a>, but decided to improve it by using Tofu for VM creating and configuration.</p>
 <p>The VM will have single vNIC bridged to LAN subnet (vmbr1) and physical WLAN interface mapped from Protectli device. See below diagram for more info:</p>
 <p><img alt="proxmox" src="../img/openwrt/openwrt.png" /></p>
@@ -639,7 +793,7 @@ qemu-img resize -f raw ./openwrt.raw 512M
 qm importdisk 102 openwrt.raw ssd-m2
 </code></pre>
 <p>Once the disk is imported and attached to OpenWrt VM, it needs to be attached into it. Just double click on the disk from the Hardware tab and confirm with OK. Now we can start the VM and wait a while for the system for the first boot.</p>
-<h1 id="system-configuration">System Configuration</h1>
+<h3 id="system-configuration">System Configuration</h3>
 <p>The very first step is to set new root password by running the command:</p>
 <pre><code class="language-bash">passwd
 </code></pre>
@@ -666,7 +820,7 @@ reboot
 </code></pre>
 <p>After the reboot, we can see that <strong>wlan0</strong> interface appeared on the list of interfaces.</p>
 <p><img alt="pikvm-web" src="../img/openwrt/interfaces.png" /></p>
-<h1 id="openwrt-configuration">OpenWrt Configuration</h1>
+<h3 id="openwrt-configuration">OpenWrt Configuration</h3>
 <p>In order to get access to OpenWRT, you need to have access to LAN network where OpenWrt VM is hosted. For me the best way was to create a tiny VM with minimal linux which has a browser and connect to Luci UI from there. In the next steps, I will show the minimum number of steps required to configure basic WiFi network with access to LAN behind OPNsense. For more advanced config, please refer to official project documentation.</p>
 <ol>
 <li>Login to Web UI using address <strong>https://192.168.1.2</strong> and accept not trusted SSL Certificate.</li>
@@ -680,7 +834,7 @@ reboot
 <img alt="Wireless Config" src="../img/openwrt/luci4.png" /></li>
 </ol>
 <p>After that, you can see your new network being broadcasted. Just login and enjoy it!</p>
-<h1 id="bottom-line">Bottom line</h1>
+<h2 id="summary">Summary</h2>
 <p>The configuration does not work out of the box. As you can see, the process requires a couple of non-trivial steps. With that being said, I must say I'm a bit disappointed. The signal is not a superpower. What is more, I would prefer to configure this WiFi on an OPNsense VM and not host another one and maintain it just for WiFi Management. I will think of maybe a dedicated WiFi device in the near future as an extension of my lab network.</p>
 
 
