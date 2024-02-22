@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://lab.k8sky.dev/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/about/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/hardware/costs/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/hardware/pikvm-a3/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/hardware/protectli-vp2420/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/software/openwrt/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/software/opnsense/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://lab.k8sky.dev/software/proxmox-ve/</loc>
-         <lastmod>2024-02-21</lastmod>
+         <lastmod>2024-02-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
