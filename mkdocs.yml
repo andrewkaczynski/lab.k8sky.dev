@@ -12,6 +12,7 @@ nav:
   - Software:
     - "Proxmox VE": "software/proxmox-ve.md"
     - "OPNsense": "software/opnsense.md"
+    - "OpenWrt": "software/openwrt.md"
   - About: about.md
 
 theme: 
@@ -27,4 +28,16 @@ theme:
 copyright: "Copyright 2023-2024 @ Andrzej Kaczynski"
 extra:
   generator: false
+
+plugins:
+  - search
+  - git-authors
+  - git-revision-date-localized:
+      type: date
+      timezone: Europe/Warsaw
+      locale: en
+      exclude:
+        - index.md
+      fallback_to_build_date: false
+      enable_creation_date: true
 
